@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OPCxCity 爱创社</title>
+<meta name="description" content="OPCxCity 全国 AI+OPC 社群联盟：公益链接，科技向善，让每一位 OPC 都能被看见、被关注、被尊重、被赋能。">
+<link rel="icon" href="mark.png">
+<style>
+:root{
+  --paper:#ffffff; --ink:#0c1820; --soft:#56646c; --tone:#f1f5f7;
+  --blue:#0fa0db; --yellow:#fff217;
+  --night:#0b1720; --night2:#13232d; --night3:#1c303b; --mist:#a9bac3;
+  --t1:clamp(36px,4vw,58px); --t2:clamp(26px,2.4vw,36px); --t3:clamp(18px,1.4vw,20px); --t4:16px; --t5:13px;
+  --m:clamp(16px,3vw,40px); --max:1240px; --gap:clamp(88px,10vw,140px);
+  --f:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);font-size:var(--t4);line-height:1.7;overflow-x:hidden}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+::selection{background:var(--yellow);color:var(--ink)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{width:100%;max-width:var(--max);margin-inline:auto;padding-inline:var(--m)}
+h1,h2,h3{font-weight:700;letter-spacing:-.01em}
+h2{font-size:var(--t2);line-height:1.3}
+.lead{font-size:var(--t3);line-height:1.7}
+.small{font-size:var(--t5);color:var(--soft)}
+section{padding-block:var(--gap)}
+
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px;padding:11px 22px;border-radius:999px;border:0;cursor:pointer;font-family:inherit;transition:transform .2s cubic-bezier(.2,.8,.2,1),background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--night3);color:#fff}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:30;background:var(--night)}
+.nav .wrap{display:flex;align-items:center;gap:clamp(12px,3vw,40px);height:64px}
+.nav ul{margin-left:auto}
+.nav .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:700;font-size:18px;letter-spacing:.01em}
+.nav .logo img{width:28px;height:28px}
+.nav .logo b,footer .logo b{color:var(--yellow);font-weight:700;margin:0 .04em}
+.nav ul{display:flex;gap:clamp(14px,2.4vw,32px);list-style:none;font-size:15px;color:#d5e0e6}
+.nav ul a{text-decoration:none;transition:color .2s;position:relative;padding:6px 0}
+.nav ul a[aria-current=true]{color:#fff}
+.nav ul a[aria-current=true]::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;border-radius:2px;background:var(--yellow)}
+.nav ul a:hover{color:var(--yellow)}
+.nav .btn{padding:8px 18px;font-size:14px;gap:0}
+
+/* hero + map */
+.hero{background:var(--night);color:#fff;padding-block:clamp(28px,3vw,48px) clamp(40px,5vw,72px)}
+.hero .grid{display:grid;grid-template-columns:4.6fr 7.4fr;gap:clamp(24px,4vw,56px);align-items:center}
+.hero h1{font-size:var(--t1);line-height:1.18}
+.hero h1 b{color:var(--yellow);font-weight:700}
+.hero .lead{color:#d5e0e6;margin-top:22px;max-width:26em}
+.hero .acts{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.stats{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:clamp(20px,3vw,44px);margin-top:28px}
+.stats strong{display:block;font-size:clamp(28px,2.8vw,40px);line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums}
+.stats strong i{font-style:normal;color:var(--yellow)}
+.stats span{font-size:var(--t5);color:var(--mist)}
+
+.map{position:relative}
+.map svg{width:100%;height:auto;display:block}
+.prov{fill:#122630;stroke:#0b1720;stroke-width:.7;transition:fill .3s}
+.nine{fill:none;stroke:#2f4a57;stroke-width:.8}
+.glow{fill:var(--blue);opacity:.22;filter:url(#blur);pointer-events:none}
+.dot{cursor:pointer;outline:none}
+.dot .c{fill:var(--blue);transition:fill .2s}
+.dot.none .c{fill:var(--night);stroke:var(--yellow);stroke-width:1.1}
+.dot.wiki .c{fill:#4f6874}
+.dot.hq .c{fill:var(--yellow)}
+.dot .hit{fill:transparent}
+.dot:hover .c,.dot:focus-visible .c{fill:#fff}
+.dot.on .c{fill:var(--yellow)}
+.dot.dim{opacity:.18}
+.pulse{fill:none;stroke:var(--yellow);stroke-width:1.2;transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-out infinite;pointer-events:none}
+@keyframes pulse{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(3.2)}}
+.link{fill:none;stroke:var(--yellow);stroke-width:1.4;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw .9s cubic-bezier(.3,.7,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.lbl{font-size:10.5px;fill:#c9d6dc;pointer-events:none;paint-order:stroke;stroke:#0b1720;stroke-width:3px;stroke-linejoin:round}
+.lbl.hq{fill:var(--yellow);font-weight:700}
+.tip{position:absolute;pointer-events:none;background:#fff;color:var(--ink);font-size:13px;line-height:1.5;padding:7px 12px;border-radius:10px;transform:translate(-50%,calc(-100% - 12px));white-space:nowrap;opacity:0;transition:opacity .15s;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.tip.on{opacity:1}
+.tip b{display:block;font-size:14px}
+.finder{position:absolute;left:0;bottom:44px;width:min(48%,340px);display:grid;gap:8px}
+.finder input{min-width:0;font:inherit;font-size:15px;background:var(--night2);color:#fff;border:0;border-radius:999px;padding:12px 20px;outline:none;transition:background .2s}
+.finder input:focus{background:var(--night3)}
+.finder input::placeholder{color:#7f939d}
+.now{background:var(--night2);border-radius:16px;padding:12px 18px;min-height:48px;font-size:14px;color:#d5e0e6;line-height:1.55}
+.now b{color:#fff;font-size:16px;margin-right:8px}
+.now em{font-style:normal;color:var(--yellow);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12.5px;color:var(--mist);margin-top:8px}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+
+/* city board */
+.board{background:var(--tone)}
+.board-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.board-head p{color:var(--soft);margin-top:8px}
+.seg{display:inline-flex;background:#fff;border-radius:999px;padding:4px}
+.seg button{font:inherit;font-size:14px;color:var(--ink);background:none;border:0;border-radius:999px;padding:8px 16px;cursor:pointer;transition:background .2s}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff}
+.top3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:clamp(28px,3vw,40px)}
+.top3 button{all:unset;cursor:pointer;background:var(--ink);color:#fff;border-radius:20px;padding:24px 26px;display:flex;flex-direction:column;gap:4px;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.top3 button:hover{transform:translateY(-3px)}
+.top3 button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.top3 .city{font-size:22px;font-weight:700}
+.top3 .num{font-size:clamp(40px,4.4vw,60px);font-weight:700;line-height:1.1;color:var(--yellow);font-variant-numeric:tabular-nums}
+.top3 .num small{font-size:16px;color:#d5e0e6;font-weight:500;margin-left:4px}
+.top3 .who{font-size:13px;color:var(--mist)}
+.list{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.list button{all:unset;box-sizing:border-box;width:100%;cursor:pointer;background:#fff;border-radius:14px;padding:14px 18px;display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 10px;transition:background .2s,transform .2s}
+.list button:hover{transform:translateY(-2px)}
+.list button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.list .city{font-size:17px;font-weight:700}
+.list .num{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.list .who{grid-column:1/-1;font-size:13px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list .bar{grid-column:1/-1;height:4px;border-radius:2px;background:var(--tone);margin-top:6px;overflow:hidden}
+.list .bar i{display:block;height:100%;background:var(--blue);border-radius:2px}
+.more{margin-top:16px;font:inherit;font-size:14px;background:#fff;color:var(--ink);border:0;border-radius:999px;padding:10px 20px;cursor:pointer}
+.wait{margin-top:clamp(36px,4vw,56px);display:grid;grid-template-columns:auto 1fr;gap:16px 28px;align-items:start}
+.wait h3{font-size:18px}
+.wait p{font-size:14px;color:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{font:inherit;font-size:14px;background:#fff;color:var(--ink);border:0;border-radius:999px;padding:6px 14px;cursor:pointer;transition:background .2s}
+.chips button:hover{background:var(--yellow)}
+.src{font-size:13px;color:var(--soft);margin-top:28px;line-height:1.6}
+
+/* milestones */
+.ms-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap}
+.ms-head p{color:var(--soft);max-width:30em}
+.ms{list-style:none;margin-top:clamp(36px,4vw,56px);display:grid;gap:clamp(48px,6vw,88px)}
+.ms>li{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,64px);align-items:center}
+.ms>li:nth-child(even) .pic{order:2}
+.pic{position:relative;border-radius:16px;overflow:hidden;background:var(--tone);aspect-ratio:4/3}
+.pic img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.ms>li:hover .pic img{transform:scale(1.03)}
+.pic.type{background:var(--ink);color:#fff;padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.pic.type::after{content:"";position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;background:var(--blue)}
+.pic.type .tt{position:relative;z-index:1;font-size:15px;color:var(--mist);font-weight:600}
+.nums3{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:20px 24px}
+.nums3 .n1{grid-column:1/-1}
+.nums3 strong{display:block;font-size:clamp(32px,3vw,44px);line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums}
+.nums3 .n1 strong{font-size:clamp(56px,6vw,88px);color:var(--yellow)}
+.nums3 strong i{font-style:normal;color:var(--yellow)}
+.nums3 span{display:block;font-size:14px;color:#d5e0e6;margin-top:4px}
+.when{margin-top:10px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.when .d{font-size:15px;font-weight:600;color:#0a6f99;font-variant-numeric:tabular-nums}
+.when .p{font-size:15px;color:var(--soft)}
+.ms h3{font-size:clamp(22px,2vw,28px);line-height:1.35}
+.ms .body{margin-top:12px;color:#26353d;max-width:34em}
+.ms .role{margin-top:14px;background:var(--tone);border-radius:12px;padding:12px 16px;font-size:15px}
+.ms .role b{font-weight:600}
+.press{list-style:none;margin-top:16px;display:grid;gap:6px}
+.press a{display:flex;gap:12px;align-items:baseline;text-decoration:none;font-size:15px;padding:4px 0;transition:color .2s}
+.press a:hover{color:var(--blue)}
+.press .o{flex:none;font-size:var(--t5);font-weight:600;color:var(--soft);width:5.6em}
+.press .h{text-decoration:underline;text-decoration-color:#c9d4da;text-underline-offset:4px}
+
+
+/* cases */
+.cases{background:var(--tone)}
+.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(32px,4vw,52px)}
+.case{background:#fff;border-radius:20px;padding:clamp(22px,2.6vw,36px);display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.case:hover{transform:translateY(-4px)}
+.case .big{border-radius:14px;padding:22px 24px;margin-bottom:24px}
+.case .big strong{display:block;font-size:clamp(36px,4vw,56px);line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums}
+.case .big span{display:block;font-size:15px;margin-top:6px;font-weight:600}
+.c-blue .big{background:var(--blue);color:var(--ink)}
+.c-yellow .big{background:var(--yellow);color:var(--ink)}
+.case h3{font-size:clamp(22px,2vw,28px);line-height:1.3}
+.case .where{font-size:14px;color:var(--soft);margin-top:4px}
+.case ul:not(.press){list-style:none;margin-top:14px;display:grid;gap:10px}
+.case ul:not(.press) li{padding-left:16px;position:relative;font-size:15px;color:#26353d}
+.case ul:not(.press) li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.case .tie{margin-top:16px;background:var(--tone);border-radius:12px;padding:12px 16px;font-size:15px}
+.case .tie b{font-weight:600}
+.case .press{margin-top:auto;padding-top:16px}
+.c-ink{background:var(--ink);color:#fff}
+.c-ink .big{background:var(--night3);color:#fff}
+.c-dark .big{background:var(--ink);color:#fff}
+.c-dark .big strong{color:var(--yellow)}
+.c-ink .big strong{color:var(--yellow)}
+.c-ink .where{color:var(--mist)}
+.c-ink .tie{background:var(--night3)}
+.c-ink ul:not(.press) li{color:#d5e0e6}
+.c-ink ul:not(.press) li::before{background:var(--yellow)}
+.c-ink .press a{color:#fff}
+.c-ink .press .o{color:var(--mist)}
+.c-ink .press .h{text-decoration-color:#3a5663}
+
+/* creed */
+.creed{background:var(--paper)}
+.creed .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(28px,3vw,44px)}
+.pillar{position:relative;overflow:hidden;background:var(--tone);border-radius:20px;padding:clamp(28px,3.4vw,48px);min-height:240px;display:flex;flex-direction:column;justify-content:flex-end}
+.pillar i{position:absolute;right:-48px;top:-48px;width:180px;height:180px;border-radius:50%;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.pillar:hover i{transform:scale(1.12)}
+.p-yellow i{background:var(--yellow)}
+.p-blue i{background:var(--blue)}
+.pillar .word{position:relative;font-size:clamp(32px,3.4vw,48px);font-weight:700;line-height:1.15}
+.pillar p{position:relative;margin-top:10px;font-size:17px;color:#26353d;max-width:24em}
+.founder{display:grid;grid-template-columns:5fr 7fr;gap:clamp(28px,5vw,72px);align-items:center;margin-top:clamp(64px,8vw,112px)}
+.founder figure{border-radius:20px;overflow:hidden}
+.founder figure img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:60% 85%}
+.founder h3{font-size:17px;color:var(--soft);font-weight:600}
+.lead-q{margin-top:0}
+.lead-q p{font-size:clamp(24px,2.4vw,34px);font-weight:700;line-height:1.4}
+.lead-q cite{display:block;font-style:normal;font-size:14px;color:var(--soft);margin-top:10px}
+.voices{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:28px 32px;margin-top:clamp(32px,4vw,48px)}
+.voices li{position:relative;padding-left:30px}
+.voices li::before{content:"“";position:absolute;left:0;top:-6px;font-size:40px;line-height:1;font-weight:700;color:var(--blue)}
+.voices q{display:block;quotes:none;font-size:17px;font-weight:600;line-height:1.6}
+.voices small{display:block;font-size:13px;color:var(--soft);margin-top:6px}
+
+/* join */
+.join{background:var(--yellow)}
+.join .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start}
+.join .lead{margin-top:14px;max-width:24em}
+.join .acts{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.join .btn{background:var(--ink);color:#fff}
+.join .btn.alt{background:#fff;color:var(--ink)}
+.offer{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.offer li{background:rgba(255,255,255,.7);border-radius:14px;padding:16px 18px}
+.offer h3{font-size:17px}
+.offer p{font-size:14px;color:#3a4850;margin-top:4px}
+.offer li.full{grid-column:1/-1;background:var(--ink);color:#fff}
+.offer li.full p{color:#d5e0e6}
+
+footer{background:var(--night);color:var(--mist);padding-block:48px}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;font-size:var(--t5)}
+footer .logo{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:18px}
+footer .logo img{width:28px;height:28px}
+footer .logo b{color:var(--yellow)}
+
+/* motion */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i,0) * 80ms)}
+.rv.in{opacity:1;transform:none}
+.no-js .rv{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  .link{stroke-dashoffset:0;animation:none}
+  .pulse{animation:none}
+  html{scroll-behavior:auto}
+}
+
+@media (max-width:900px){
+  .nav .logo span{font-size:16px}
+  .nav ul{gap:14px}
+  .legend{margin-top:10px}
+  .hero{padding-bottom:40px}
+  .nav .btn .full{display:none}
+  .nav .btn{padding:7px 14px}
+  .hero .grid,.atlas .box,.ms>li,.creed .pair,.join .grid{grid-template-columns:1fr}
+  .ms>li:nth-child(even) .pic{order:0}
+  .voices{grid-template-columns:1fr}
+  .founder{grid-template-columns:1fr}
+  .founder figure img{aspect-ratio:4/3}
+  .pillar{min-height:180px}
+  .case-grid{grid-template-columns:1fr}
+  .offer{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(3,1fr);gap:12px}
+  .lbl{display:none}
+  .lbl.hq{display:block}
+  .finder{position:static;width:auto;margin-top:12px}
+  .top3,.list{grid-template-columns:1fr}
+  .wait{grid-template-columns:1fr}
+  .card .row strong{font-size:18px}
+}
+@media (max-width:420px){.nav .logo span{display:none}}
+</style>
+</head>
+<body class="no-js">
+
+<nav class="nav" aria-label="主导航">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="OPCxCity 首页"><img src="mark.png" alt="" width="270" height="270"><span>OPC<b>x</b>City</span></a>
+    <ul>
+      <li><a href="#atlas">城市</a></li>
+      <li><a href="#milestones">足迹</a></li>
+      <li><a href="#cases">标杆</a></li>
+      <li><a href="#creed">理念</a></li>
+    </ul>
+    <a class="btn" href="#join">加入<span class="full">联盟</span></a>
+  </div>
+</nav>
+
+<main id="top">
+  <header class="hero">
+    <div class="wrap grid">
+      <div>
+        <h1 class="rv">让每一位 <b>OPC</b><br>都能被看见</h1>
+        <p class="lead rv" style="--i:1">爱创社，全国 AI+OPC 社群联盟。每座城一位主理人，把一人公司连在一起。</p>
+        <div class="stats rv" style="--i:2">
+          <div><strong>100<i>+</i></strong><span>座城市</span></div>
+          <div><strong>1000</strong><span>个 OPC 社区</span></div>
+          <div><strong>10<i>万+</i></strong><span>位 OPC 创业者</span></div>
+        </div>
+        <div class="acts rv" style="--i:3">
+          <a class="btn" href="#finder" id="go-find">找到你的城市</a>
+          <a class="btn ghost" href="#milestones">看看足迹</a>
+        </div>
+      </div>
+      <div class="map" id="map">
+        <svg id="svg" viewBox="0 0 506 512" role="img" aria-label="中国地图，标出各城市 OPCxCity 社群"></svg>
+        <div class="tip" id="tip" aria-hidden="true"></div>
+        <div class="finder" id="finder">
+          <label for="q" style="position:absolute;left:-9999px">搜索城市或主理人</label>
+          <input id="q" type="search" placeholder="搜索城市或主理人" autocomplete="off">
+          <div class="now" id="now" aria-live="polite"></div>
+        </div>
+        <div class="legend">
+          <span><i style="background:#fff217"></i>温州 · 联盟秘书处</span>
+          <span><i style="background:#0fa0db"></i>已有社群</span>
+          <span><i style="box-shadow:inset 0 0 0 1.5px #fff217"></i>等待主理人</span>
+          <span><i style="background:#4f6874"></i>知识库收录</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="board" id="atlas" aria-labelledby="board-h">
+    <div class="wrap">
+      <div class="board-head">
+        <div>
+          <h2 id="board-h" class="rv">每座城，都有点火的人</h2>
+          <p class="rv" style="--i:1">点任意一座城，地图上会连到温州。</p>
+        </div>
+        <div class="seg rv" style="--i:2" role="group" aria-label="排序依据">
+          <button type="button" data-l="s" aria-pressed="true">按社群人数</button>
+          <button type="button" data-l="k" aria-pressed="false">按 OPC 社区数</button>
+        </div>
+      </div>
+      <div class="top3" id="top3"></div>
+      <ul class="list" id="list"></ul>
+      <button type="button" class="more" id="more">展开全部城市</button>
+      <div class="wait">
+        <div><h3>等待主理人</h3><p>点一下，看看这座城</p></div>
+        <div class="chips" id="chips"></div>
+      </div>
+      <p class="src">主理人与社群人数来自 OPCxCity 官网「全国各大城市 OPC 社群概况」；OPC 社区数来自爱创社飞书知识库「全国社区」名录，江西按全省计。两份名录持续更新。</p>
+    </div>
+  </section>
+
+  <section id="milestones" aria-labelledby="ms-h">
+    <div class="wrap">
+      <div class="ms-head">
+        <h2 id="ms-h" class="rv">2026，走过五座城</h2>
+        <p class="rv" style="--i:1">从厦门第一次聚齐各地主理人，到乌镇的世界互联网大会，一人公司走进了越来越大的场合。</p>
+      </div>
+      <ol class="ms">
+        <li>
+          <figure class="pic rv"><img src="img/xm-screen.jpg" alt="厦门会场大屏：WOPC 全球主理人交流峰会暨 OPC x CITY 厦门站" loading="lazy" width="1024" height="768"></figure>
+          <div>
+            <h3 class="rv" style="--i:0">金砖 OPC 共生大会，WOPC 成立</h3>
+            <div class="when rv" style="--i:1"><span class="d">2026.05.28</span><span class="p">厦门 · 国际会展中心</span></div>
+            <p class="body rv" style="--i:2">金砖国家新工业革命展览会的官方配套活动，报名超过 1000 人，世界 OPC 生态联盟 WOPC 在会上成立。</p>
+            <p class="role rv" style="--i:3"><b>OPCxCity：</b>同期举办「OPC×City·厦门站」，各地主理人第一次坐到一起。</p>
+            <ul class="press rv" style="--i:4">
+              <li><a href="https://www.bjnews.com.cn/detail/1780372418129057.html" target="_blank" rel="noopener"><span class="o">新京报</span><span class="h">金砖 OPC 共生大会闭幕，WOPC 正式成立</span></a></li>
+              <li><a href="http://fj.people.com.cn/n2/2026/0527/c181466-41593157.html" target="_blank" rel="noopener"><span class="o">人民网</span><span class="h">2026 金砖国家新工业革命伙伴关系论坛在厦门开幕</span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <figure class="pic rv"><img src="img/hz-share.jpg" alt="杭州会场大屏：全国 AI+OPC 社区交流分享会，2026 年 6 月 30 日" loading="lazy" width="1024" height="768"></figure>
+          <div>
+            <h3 class="rv" style="--i:0">首届「AI+OPC」创新发展大会</h3>
+            <div class="when rv" style="--i:1"><span class="d">2026.06.29–30</span><span class="p">杭州</span></div>
+            <p class="body rv" style="--i:2">杭州市政府与新华社浙江分社等主办。北京、上海、杭州、广州等 10 座城市的 OPC 社区代表，在会上发起「AI+OPC」社区联盟倡议。</p>
+            <p class="role rv" style="--i:3"><b>OPCxCity：</b>发起人谷雨作为社区代表上台。第二天的全国「AI+OPC」社区交流分享会，是倡议发起后的第一场线下活动。</p>
+            <ul class="press rv" style="--i:4">
+              <li><a href="https://www.news.cn/politics/20260630/cc00a2a83baa4ae694db1071f75cf976/c.html" target="_blank" rel="noopener"><span class="o">新华网</span><span class="h">首届「AI+OPC」创新发展大会在杭州举行</span></a></li>
+              <li><a href="https://zj.chinadaily.com.cn/a/202606/29/WS6a422b6ca310d709c2fbac05.html" target="_blank" rel="noopener"><span class="o">中国日报网</span><span class="h">首届「AI+OPC」大会落地杭州，政企共筑个体崛起新引擎</span></a></li>
+              <li><a href="http://zj.people.com.cn/n2/2026/0630/c186327-41624916.html" target="_blank" rel="noopener"><span class="o">人民网</span><span class="h">杭州发布「AI+OPC」三年行动计划</span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <figure class="pic rv"><img src="img/wz-sign.jpg" alt="温州大会台上，十城代表联合发起全国人工智能 OPC 社区共建公约" loading="lazy" width="1024" height="768"></figure>
+          <div>
+            <h3 class="rv" style="--i:0">十城签下《全国人工智能 OPC 社区共建公约》</h3>
+            <div class="when rv" style="--i:1"><span class="d">2026.08.18</span><span class="p">温州</span></div>
+            <p class="body rv" style="--i:2">温州人工智能 OPC 创业生态大会上，上海、杭州、苏州、西安、南京、温州、南昌、惠州、台州、澄迈十座城市的社区代表联合发起公约，主张开放、包容、合规、共赢。</p>
+            <p class="role rv" style="--i:3"><b>OPCxCity：</b>谷雨在台上宣读公约。联盟秘书处就在温州。</p>
+            <ul class="press rv" style="--i:4">
+              <li><a href="http://www.zj.xinhuanet.com/20260819/01175edf020949e5baf809165d4a8d8e/c.html" target="_blank" rel="noopener"><span class="o">新华网</span><span class="h">护航 AI「一人公司」，温州鹿城发布 OPC「十条举措」</span></a></li>
+              <li><a href="https://www.sohu.com/a/1096021792_122014422" target="_blank" rel="noopener"><span class="o">温州日报</span><span class="h">澄迈温州两地团委签约，OPC 青年创业跨海结盟</span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <figure class="pic rv"><img src="img/stage.jpg" alt="澄迈台上，30 座城市的 OPC 社区代表手拉手" loading="lazy" width="2000" height="720"></figure>
+          <div>
+            <h3 class="rv" style="--i:0">30 城 OPC 社区，齐聚澄迈</h3>
+            <div class="when rv" style="--i:1"><span class="d">2026.10.30</span><span class="p">海南澄迈</span></div>
+            <p class="body rv" style="--i:2">第二届海南—东盟海归交流大会设四场平行分论坛，OPC 创业生态是其中之一。澄迈和温州两地团委签下 OPC 青年创业合作。</p>
+            <p class="role rv" style="--i:3"><b>OPCxCity：</b>联合主办「新澄迈·新业态」OPC 创业生态沙龙，30 座城市的社区代表同台；前一晚开城市发展交流会。</p>
+            <ul class="press rv" style="--i:4">
+              <li><a href="https://www.chinanews.com.cn/aseaninfo/2026/10-30/10723396.shtml" target="_blank" rel="noopener"><span class="o">中新网</span><span class="h">2026 年第二届海南—东盟海归交流大会举行</span></a></li>
+              <li><a href="https://www.sohu.com/a/1096021792_122014422" target="_blank" rel="noopener"><span class="o">温州日报</span><span class="h">澄迈温州两地团委签约，OPC 青年创业跨海结盟</span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="pic type rv" aria-label="乌镇峰会 OPC 数据">
+            <div class="nums3">
+              <div class="n1"><strong>1347</strong><span>个项目报名 OPC 特色赛</span></div>
+              <div><strong>31</strong><span>个国家和地区</span></div>
+              <div><strong>60<i>+</i></strong><span>个 OPC 社区和企业到场</span></div>
+            </div>
+          </div>
+          <div>
+            <h3 class="rv" style="--i:0">一人公司，走上世界互联网大会</h3>
+            <div class="when rv" style="--i:1"><span class="d">2026.11.02–05</span><span class="p">浙江乌镇</span></div>
+            <p class="body rv" style="--i:2">乌镇峰会第一次举办人工智能 OPC 嘉年华，「直通乌镇」大赛第一次设 OPC 特色赛。全球 60 余个 OPC 社区和企业到场，北京、杭州、苏州、温州、泉州五城的 30 余个社区和企业在「OPC 创想岛」参展。</p>
+            <ul class="press rv" style="--i:3">
+              <li><a href="https://www.news.cn/politics/20261105/5c60a919732b46a4830877c1e0581f59/c.html" target="_blank" rel="noopener"><span class="o">新华网</span><span class="h">2026 年世界互联网大会乌镇峰会热点聚焦</span></a></li>
+              <li><a href="https://www.163.com/dy/article/LAVTLHDP05346RC6.html" target="_blank" rel="noopener"><span class="o">新华社</span><span class="h">首设 OPC 特色赛，乌镇看见「一个人」的力量</span></a></li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="cases" id="cases" aria-labelledby="cases-h">
+    <div class="wrap">
+      <div class="ms-head">
+        <h2 id="cases-h" class="rv">四个标杆社区</h2>
+        <p class="rv" style="--i:1">一座县城、一个 AI 影视基地、一片山水、一个政策先行区。四条路，都让一个人有地方落脚。</p>
+      </div>
+      <div class="case-grid">
+        <article class="case c-blue rv">
+          <div class="big"><strong>400+</strong><span>家企业主体、700 位创客，挂牌不到一年</span></div>
+          <h3>澄迈 OPC 创业社区</h3>
+          <p class="where">海南澄迈 · 老城科技新城、海南生态软件园</p>
+          <ul>
+            <li>2026 年 3 月挂牌，海南自贸港第一个 OPC 创业社区；5 月成立全国首个 OPC 创业社区理事会，入驻企业投票参与社区事务。</li>
+            <li>县城里有一万多陪读家长，「左手陪读，右手创业」。</li>
+            <li>《全国 OPC 发展观察报告（2026）》里唯一入选的县级单元，也是十城公约里唯一的县域。</li>
+          </ul>
+          <p class="tie"><b>与 OPCxCity：</b>主理人司新颖；10 月 30 日联合主办 OPC 创业生态沙龙。</p>
+          <ul class="press">
+            <li><a href="https://www.stdaily.com/web/gdxw/2026-10/21/content_599961.html" target="_blank" rel="noopener"><span class="o">科技日报</span><span class="h">不到一年，海南这座小县城集聚 400 多家「一人公司」</span></a></li>
+            <li><a href="https://hinews.cn/page?m=1&n=2831034&s=1044" target="_blank" rel="noopener"><span class="o">南海网</span><span class="h">转身澄迈 OPC，一位「陪读爸爸」的创业逆袭路</span></a></li>
+          </ul>
+        </article>
+        <article class="case c-yellow rv" style="--i:1">
+          <div class="big"><strong>用作品说话</strong><span>入驻的 AI 创作者，作品要在大赛拿过奖</span></div>
+          <h3>爱莱坞</h3>
+          <p class="where">浙江温州 · 龙湾国际云软件谷</p>
+          <ul>
+            <li>对标好莱坞的中国 AI 影视产业基地，近 10 家头部 AI 影视机构入驻。</li>
+            <li>2022 年由一群 AI 志愿者发起，靠一百多场大赛筛出创作者；推出面向 AI 创作者的服务保障「18 条」。</li>
+            <li>温州理工学院的老师带毕业生团队在这里开了工作室；一人公司模式的 AI 影视创作者，在这里解决了版权维权。</li>
+          </ul>
+          <p class="tie"><b>与 OPCxCity：</b>温州是联盟秘书处所在地，爱莱坞是温州 OPC 的代表案例。</p>
+          <ul class="press">
+            <li><a href="https://www.chinanews.com.cn/cul/2026/06-12/10639287.shtml" target="_blank" rel="noopener"><span class="o">中新网</span><span class="h">中国 AI 影视为何首次「喊出」爱莱坞</span></a></li>
+          </ul>
+        </article>
+        <article class="case c-dark rv">
+          <div class="big"><strong>山水当片场</strong><span>学会 AI 创作，给景区、民宿做内容</span></div>
+          <h3>池州 AI 游创社区</h3>
+          <p class="where">安徽池州 · 平天湖风景区</p>
+          <ul>
+            <li>游创 OPC 是数字游民的升级版：人住在山水里，用 AI 给当地景区、民宿做内容。</li>
+            <li>2026 年 8 月 28 日至 30 日，首届 AI 游创生态大会在平天湖举办，全国 AI 游创联盟平台现场上线。</li>
+            <li>联盟成员还有盐城燕舞大纵湖剧工厂、昆明 1937 影视基地等创作节点。</li>
+          </ul>
+          <p class="tie"><b>与 OPCxCity：</b>联盟与池州平天湖文旅、安徽省网络视听协会共同牵头发布联盟平台。谷雨说，这让散落各地的单人创业者告别线上孤岛。</p>
+          <ul class="press">
+            <li><a href="https://tidenews.com.cn/news.html?id=3544397" target="_blank" rel="noopener"><span class="o">潮新闻</span><span class="h">夏山 AI 音乐 OPC 游创社区亮相首届 AI 游创生态大会</span></a></li>
+          </ul>
+        </article>
+        <article class="case c-ink rv" style="--i:1">
+          <div class="big"><strong>35 条</strong><span>全省首部人工智能 OPC 合规指引</span></div>
+          <h3>数安港 OPC 生态社区</h3>
+            <p class="where">浙江温州 · 中国（温州）数安港</p>
+            <ul>
+              <li>温州人工智能 OPC 的「政策先行区」，率先做集成改革试点；聘任「首席法务经理」团队，帮一人公司把合规前置。</li>
+              <li>合规指引在瓯海试点基础上编制，七章三十五条；首届「数安杯」人工智能 OPC 创新创业大赛在这里收官。</li>
+            </ul>
+            <ul class="press">
+              <li><a href="https://www.wenzhou.gov.cn/col/col1217832/art/2026/art_c2338c12916d4e2cb29c652143b32572.html" target="_blank" rel="noopener"><span class="o">温州市政府</span><span class="h">首届「数安杯」人工智能 OPC 创新创业大赛落幕</span></a></li>
+              <li><a href="https://sifa.wenzhou.gov.cn/col/col1336453/art/2026/art_3b85ec4972144b119b754e53ca912b8d.html" target="_blank" rel="noopener"><span class="o">温州司法局</span><span class="h">温州发布全省首部人工智能 OPC 合规指引</span></a></li>
+            </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="creed" id="creed" aria-labelledby="creed-h">
+    <div class="wrap">
+      <h2 id="creed-h" class="rv">我们坚持两个公益</h2>
+      <div class="pair">
+        <div class="pillar p-yellow rv" style="--i:1"><i aria-hidden="true"></i><div class="word">公益链接</div><p>让每一位 OPC 都能被看见、被关注、被尊重、被赋能。</p></div>
+        <div class="pillar p-blue rv" style="--i:2"><i aria-hidden="true"></i><div class="word">科技向善</div><p>AI 不该拿来消灭就业，要用 AI 找到和创造更多高质量的新就业。</p></div>
+      </div>
+      <div class="founder">
+        <figure class="rv"><img src="img/shirt.jpg" alt="OPCxCity 文化衫背面写着：让每一位 OPC 都能被看见、被关注、被尊重、被赋能" loading="lazy" width="2000" height="1332"></figure>
+        <div>
+          <blockquote class="lead-q rv" style="--i:1"><p>如果 AI 是让你工作没了，那就是最大的科技向恶。</p><cite>谷雨，OPCxCity 发起人 · 2026 年 9 月，海南澄迈圆桌</cite></blockquote>
+          <ul class="voices">
+            <li class="rv"><q>AI 时代的 OPC，就是 AI 时代的个体户。</q><small>谷雨 · 澄迈圆桌</small></li>
+            <li class="rv" style="--i:1"><q>能把自己养活，才有余力来做 OPC 社区。</q><small>谷雨 · 杭州主理人茶话会</small></li>
+            <li class="rv"><q>我一直相信爱是能传递的。</q><small>谷雨 · 杭州主理人茶话会</small></li>
+            <li class="rv" style="--i:1"><q>一座城市没有创业基因，就会老去。</q><small>谷雨 · 澄迈圆桌</small></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="join" id="join" aria-labelledby="join-h">
+    <div class="wrap grid">
+      <div>
+        <h2 id="join-h" class="rv">一个人创业，不必一个人扛</h2>
+        <p class="lead rv" style="--i:1">自由职业者、个体户、一人公司、两到五人的小团队都能加入，不强制注册公司。</p>
+        <div class="acts rv" style="--i:2">
+          <a class="btn" href="https://icn4k0npz3d8.feishu.cn/wiki/Xt6vwbxmmiyYIjkgIUqczCBinJb" target="_blank" rel="noopener">打开爱创社知识库</a>
+          <a class="btn alt" href="https://icn4k0npz3d8.feishu.cn/share/base/form/shrcnWexmwR9JXWzyQLlc6kyvgK" target="_blank" rel="noopener">登记你的社区</a>
+        </div>
+      </div>
+      <ul class="offer">
+        <li class="rv"><h3>订单撮合</h3><p>让需求找到合适的一人公司，各城之间互相引荐。</p></li>
+        <li class="rv" style="--i:1"><h3>算力支撑</h3><p>对接 AI 工具与算力资源。</p></li>
+        <li class="rv" style="--i:2"><h3>合规工商</h3><p>注册、财税、知识产权，少走弯路。</p></li>
+        <li class="rv" style="--i:3"><h3>金融对接</h3><p>连接各地政策与金融服务。</p></li>
+        <li class="full rv" style="--i:4"><h3>成为城市主理人</h3><p>地图上空心的黄圈，都在等第一位主理人。</p></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="logo"><img src="mark.png" alt="" width="270" height="270"><span>OPC<b>x</b>City 爱创社</span></span>
+    <span>全国 AI+OPC 社群联盟 · www.opcxcity.cn</span>
+    <span>现场照片：厦门、杭州、温州、澄迈会场</span>
+  </div>
+</footer>
+
+<script type="application/json" id="geo">GEO</script>
+<script type="application/json" id="cdata">CITIES</script>
+<script>
+document.body.classList.remove('no-js');
+const NS='http://www.w3.org/2000/svg';
+const G=JSON.parse(document.getElementById('geo').textContent);
+const C=JSON.parse(document.getElementById('cdata').textContent);
+const K=10,COS=Math.cos(36*Math.PI/180),P=(x,y)=>[(x-73)*K*COS,(54-y)*K];
+const svg=document.getElementById('svg'),tip=document.getElementById('tip'),mapEl=document.getElementById('map'),now=document.getElementById('now');
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e};
+const defs=el('defs');const f=el('filter',{id:'blur',x:'-1',y:'-1',width:'3',height:'3'},defs);el('feGaussianBlur',{stdDeviation:'5'},f);
+const gP=el('g');G.p.forEach(p=>el('path',{d:p.d,class:'prov'},gP));G.l.forEach(d=>el('path',{d,class:'nine'},gP));
+const gG=el('g'),gK=el('g'),gD=el('g'),gL=el('g');
+const nm=n=>n.replace('&','·');
+const HQ=C.find(c=>c.n==='温州');
+const maxS=Math.max(...C.map(c=>c.s));
+const rOf=c=>c===HQ?6:c.t==='have'?1.8+Math.sqrt(c.s/maxS)*4.6:c.t==='none'?2.2:1.6;
+const LBL=['北京','上海','深圳','成都','西安','武汉','温州','海口&澄迈'];
+C.forEach(c=>{
+  const [x,y]=P(c.x,c.y);c.px=x;c.py=y;const r=rOf(c);
+  if(c.t==='have')el('circle',{cx:x,cy:y,r:r*2.6,class:'glow'},gG);
+  const g=el('g',{class:'dot '+(c===HQ?'hq':c.t==='have'?'have':c.t==='none'?'none':'wiki'),tabindex:'0',role:'button','aria-label':nm(c.n)},gD);
+  el('circle',{cx:x,cy:y,r:Math.max(r,6),class:'hit'},g);
+  c.dot=el('circle',{cx:x,cy:y,r,class:'c'},g);c.g=g;
+  if(c===HQ)el('circle',{cx:x,cy:y,r,class:'pulse'},gD);
+  if(LBL.includes(c.n)){const t=el('text',{x:x+r+4,y:y+3.5,class:'lbl'+(c===HQ?' hq':'')},gL);t.textContent=nm(c.n)}
+  g.addEventListener('mouseenter',()=>showTip(c));g.addEventListener('mouseleave',()=>tip.classList.remove('on'));
+  g.addEventListener('click',()=>pick(c));
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(c)}});
+});
+function showTip(c){
+  const r=svg.getBoundingClientRect(),m=mapEl.getBoundingClientRect(),k=r.width/506;
+  tip.style.left=(r.left-m.left+c.px*k)+'px';tip.style.top=(r.top-m.top+c.py*k)+'px';
+  tip.innerHTML=`<b>${nm(c.n)}</b>${c.t==='have'?`社群 ${c.s.toLocaleString()} 人`:c.t==='none'?'等待第一位主理人':'知识库收录'}${c.k?` · OPC 社区 ${c.k} 个`:''}`;
+  tip.classList.add('on');
+}
+function link(c){
+  gK.innerHTML='';if(c===HQ)return;
+  const mx=(HQ.px+c.px)/2,my=(HQ.py+c.py)/2-Math.hypot(c.px-HQ.px,c.py-HQ.py)*.25;
+  const p=el('path',{d:`M${HQ.px},${HQ.py}Q${mx},${my} ${c.px},${c.py}`,class:'link'},gK);
+  p.style.setProperty('--len',p.getTotalLength());
+}
+function pick(c,scroll){
+  C.forEach(o=>o.g.classList.toggle('on',o===c));link(c);
+  let h=`<b>${nm(c.n)}</b>`;
+  if(c===HQ)h+='<em>联盟秘书处</em> · ';
+  if(c.t==='have')h+=`社群 ${c.s.toLocaleString()} 人${c.k?` · OPC 社区 ${c.k} 个${c.kn?'（'+c.kn+'）':''}`:''}<br>主理人 <em>${c.m}</em>`;
+  else if(c.t==='none')h+='还没有 OPCxCity 社群。<em>第一位主理人，可以是你。</em>';
+  else h+=`知识库收录了本地 OPC 社区${c.k?' '+c.k+' 个':''}。<em>主理人待登记。</em>`;
+  now.innerHTML=h;
+  if(scroll)mapEl.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'center'});
+}
+const q=document.getElementById('q');
+q.addEventListener('input',()=>{
+  const s=q.value.trim().replace(/市$/,'');
+  C.forEach(c=>c.g.classList.toggle('dim',!!s&&!(c.n.includes(s)||c.m.includes(s))));
+  if(!s)return pick(HQ);
+  const hit=C.find(c=>c.n.includes(s))||C.find(c=>c.m.includes(s));
+  if(hit)pick(hit);else{gK.innerHTML='';now.innerHTML=`<b>${s}</b>名录里还没有这座城。<em>你可以成为第一位主理人。</em>`}
+});
+document.getElementById('go-find').addEventListener('click',e=>{e.preventDefault();mapEl.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>q.focus({preventScroll:true}),300)});
+/* board */
+let layer='s',all=false;
+const top3=document.getElementById('top3'),list=document.getElementById('list'),more=document.getElementById('more');
+const card=(c,cls)=>{const v=c[layer],u=layer==='s'?'人':'个社区';return cls==='top'
+  ?`<button type="button" data-n="${c.n}"><span class="city">${nm(c.n)}</span><span class="num">${v.toLocaleString()}<small>${u}</small></span><span class="who">${c.m?'主理人 '+c.m:'主理人待登记'}</span></button>`
+  :`<li><button type="button" data-n="${c.n}"><span class="city">${nm(c.n)}</span><span class="num">${v.toLocaleString()}</span><span class="who">${c.m?'主理人 '+c.m:'主理人待登记'}</span><span class="bar"><i style="width:${Math.max(2,v/MX*100)}%"></i></span></button></li>`};
+let MX=1;
+function board(){
+  const arr=C.filter(c=>c[layer]>0).sort((a,b)=>b[layer]-a[layer]);MX=arr[0][layer];
+  top3.innerHTML=arr.slice(0,3).map(c=>card(c,'top')).join('');
+  const rest=arr.slice(3);list.innerHTML=(all?rest:rest.slice(0,12)).map(c=>card(c)).join('');
+  more.hidden=all||rest.length<=12;more.textContent=`展开全部 ${arr.length} 座城`;
+  document.querySelectorAll('#top3 button,#list button').forEach(b=>b.addEventListener('click',()=>pick(C.find(c=>c.n===b.dataset.n),true)));
+}
+document.getElementById('chips').innerHTML=C.filter(c=>c.t==='none').map(c=>`<button type="button" data-n="${c.n}">${nm(c.n)}</button>`).join('');
+document.querySelectorAll('#chips button').forEach(b=>b.addEventListener('click',()=>pick(C.find(c=>c.n===b.dataset.n),true)));
+more.addEventListener('click',()=>{all=true;board()});
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{layer=b.dataset.l;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));board()}));
+board();pick(HQ);
+const navA=[...document.querySelectorAll('.nav ul a')];
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)navA.forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+['atlas','milestones','cases','creed','join'].forEach(id=>so.observe(document.getElementById(id)));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.rv').forEach(e=>io.observe(e));
+</script>
+</body>
+</html>
