@@ -2,7 +2,7 @@
 
 域名：**opcxcity.com**（同时绑定 www.opcxcity.com）
 
-这是一个纯静态网页：没有后端、数据库，也不需要 npm 或构建。上传文件、绑定域名、配上 HTTPS 就能上线。
+这是一个纯静态网页：没有后端、数据库，也不需要 npm 或构建。只要把文件放到 Web 服务器的网站目录，绑上域名、配好 HTTPS 就能上线。
 
 ---
 
@@ -19,28 +19,25 @@ README.md         本说明（不用上传）
 
 ---
 
-## 二、部署步骤（以宝塔面板为例）
+## 二、部署步骤（Linux + Nginx）
 
-### 1. 新建站点
+下面以 `/var/www/opcxcity.com` 作为网站目录，可以换成你自己的路径。
 
-宝塔 → 网站 → 添加站点
-- 域名填两行：`opcxcity.com` 和 `www.opcxcity.com`
-- 根目录：例如 `/www/wwwroot/opcxcity.com`
-- PHP 版本：**纯静态**
-- 数据库：不创建
+### 1. 上传文件
 
-如果服务器上已经有 opcxcity.com 的站点，就直接用它的根目录，不用新建。
+在本机解压后，进入 `opcxcity-site` 文件夹执行：
 
-### 2. 上传文件
+```bash
+ssh 用户名@服务器 "mkdir -p /var/www/opcxcity.com"
+scp -r index.html mark.png img 用户名@服务器:/var/www/opcxcity.com/
+```
 
-1. 进入站点根目录，先把里面原有的文件**下载备份**一份。
-2. 删掉宝塔自动生成的默认 `index.html`、`404.html`（如有）。
-3. 上传本包里的 `index.html`、`mark.png` 和整个 `img/` 文件夹。
+如果目录里原来有文件，先备份一份再覆盖。
 
 上传后目录应该是：
 
 ```
-/www/wwwroot/opcxcity.com/
+/var/www/opcxcity.com/
 ├── index.html
 ├── mark.png
 └── img/
@@ -51,48 +48,14 @@ README.md         本说明（不用上传）
     └── xm-screen.jpg
 ```
 
-### 3. 配置 HTTPS（必须做）
+### 2. 配置 Nginx
 
-目前 opcxcity.com 的 HTTPS 证书和域名不匹配，浏览器会提示「不安全」。
-
-宝塔 → 网站 → opcxcity.com → 设置 → SSL
-1. 选 **Let's Encrypt**，勾选 `opcxcity.com` 和 `www.opcxcity.com`，申请。
-2. 申请成功后，打开 **强制 HTTPS**。
-
-申请失败一般是两个原因：
-- 域名解析还没指向这台服务器 → 到域名服务商把 `@` 和 `www` 两条 A 记录指向服务器 IP，等几分钟再申请。
-- 服务器安全组 / 防火墙没放行 80、443 端口 → 在云服务商控制台和宝塔「安全」里都放行。
-
-### 4. 确认域名解析
-
-在域名服务商后台，确认有这两条记录：
-
-| 主机记录 | 类型 | 记录值 |
-|---|---|---|
-| `@` | A | 服务器公网 IP |
-| `www` | A | 服务器公网 IP |
-
-> 服务器在中国大陆时，域名需要先完成 ICP 备案，否则访问会被拦截。
-
----
-
-## 三、不用宝塔，直接用 Nginx
-
-把文件放到 `/var/www/opcxcity.com/`，站点配置参考：
+新建 `/etc/nginx/conf.d/opcxcity.com.conf`：
 
 ```nginx
 server {
     listen 80;
     server_name opcxcity.com www.opcxcity.com;
-    return 301 https://opcxcity.com$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name opcxcity.com www.opcxcity.com;
-
-    ssl_certificate     /etc/letsencrypt/live/opcxcity.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/opcxcity.com/privkey.pem;
 
     root  /var/www/opcxcity.com;
     index index.html;
@@ -111,9 +74,52 @@ server {
 }
 ```
 
-证书可以用 certbot 申请：`certbot --nginx -d opcxcity.com -d www.opcxcity.com`
+检查并生效：
 
-改完配置后执行 `nginx -t && nginx -s reload`。
+```bash
+nginx -t && systemctl reload nginx
+```
+
+此时用 http://opcxcity.com 应该已经能打开。
+
+### 3. 配置 HTTPS（必须做）
+
+目前 opcxcity.com 的 HTTPS 证书和域名不匹配，浏览器会提示「不安全」。用 certbot 申请免费证书：
+
+```bash
+certbot --nginx -d opcxcity.com -d www.opcxcity.com
+```
+
+按提示选择「把 HTTP 重定向到 HTTPS」。certbot 会自动改好 Nginx 配置，并自动续期。
+
+没装 certbot：Ubuntu/Debian 用 `apt install certbot python3-certbot-nginx`，CentOS 用 `yum install certbot python3-certbot-nginx`。
+
+如果已经有自己购买的证书，在 server 块里加 `listen 443 ssl;` 和 `ssl_certificate`、`ssl_certificate_key` 两行指向证书文件即可。
+
+申请失败一般是两个原因：
+- 域名解析还没指向这台服务器 → 见第 4 步。
+- 80、443 端口没放行 → 在云服务商控制台的安全组和服务器防火墙里都放行。
+
+### 4. 确认域名解析
+
+在域名服务商后台，确认有这两条记录：
+
+| 主机记录 | 类型 | 记录值 |
+|---|---|---|
+| `@` | A | 服务器公网 IP |
+| `www` | A | 服务器公网 IP |
+
+> 服务器在中国大陆时，域名需要先完成 ICP 备案，否则访问会被拦截。
+
+---
+
+## 三、其他环境
+
+原理都一样：把三样文件放进网站根目录，首页设为 `index.html`，绑定域名，配好 HTTPS。
+
+- **Apache**：文件放进站点的 `DocumentRoot`，默认就认 `index.html`，不需要额外配置；证书用 `certbot --apache -d opcxcity.com -d www.opcxcity.com`。
+- **对象存储 / 静态托管**（阿里云 OSS、腾讯云 COS、Vercel、Netlify、Cloudflare Pages 等）：上传三样文件，开启「静态网站」，默认首页填 `index.html`，在控制台里绑定自定义域名并开启 HTTPS。
+- **服务器上已经有其他网站在跑**：新建一个站点（虚拟主机）单独绑定 opcxcity.com，不要覆盖别的站点目录。
 
 ---
 
@@ -147,8 +153,9 @@ server {
 
 | 现象 | 原因与处理 |
 |---|---|
-| 打开显示 403 | 根目录里没有 `index.html`，或者域名绑错了站点目录 |
-| 打开显示 404 | 文件上传到了子文件夹里，`index.html` 要直接放在根目录 |
+| 打开显示 403 | 网站目录里没有 `index.html`；或目录权限不够，执行 `chmod -R 755 /var/www/opcxcity.com` |
+| 打开显示 404 | 文件上传到了子文件夹里，`index.html` 要直接放在网站根目录 |
+| 打开的是别的网站 / 默认欢迎页 | 域名没绑到这个站点，检查 Nginx 的 `server_name` 和 `root` |
 | 照片裂图 | `img/` 文件夹没传，或者文件夹名被改了（必须是小写 `img`） |
 | 提示「不安全」 | 证书没配，或证书不包含当前访问的域名，回到第二节第 3 步 |
 | 微信里打不开 / 被拦截 | 域名未备案，或被微信标记，需在微信公众平台申诉 |
