@@ -44,6 +44,7 @@ scp -r index.html mark.png img 用户名@服务器:/var/www/opcxcity.com/
     ├── hz-share.jpg
     ├── shirt.jpg
     ├── stage.jpg
+    ├── wz-1111.jpg
     ├── wz-sign.jpg
     └── xm-screen.jpg
 ```
@@ -110,6 +111,27 @@ certbot --nginx -d opcxcity.com -d www.opcxcity.com
 | `www` | A | 服务器公网 IP |
 
 > 服务器在中国大陆时，域名需要先完成 ICP 备案，否则访问会被拦截。
+
+### 5. 首页能打开、图片全部不显示？
+
+这说明 nginx 只把首页交给了静态文件，其余路径（`/img/…`、`/mark.png`）都转给了后端程序。打开图片地址会看到类似这样的 404：
+
+```
+{"timestamp":"…","status":404,"error":"Not Found","path":"/img/stage.jpg"}
+```
+
+这是后端（Java/Spring 一类程序）返回的，不是 nginx 找不到文件。常见于同一个 server 里还配了 `location / { proxy_pass …; }`，比如和学习平台共用一套 nginx。
+
+解决：在这个 server 块里、`proxy_pass` 那段**之前**，加上官网静态文件的路径，`root` 写成 `index.html` 所在的目录：
+
+```nginx
+    location = /mark.png { root /var/www/opcxcity.com; }
+    location ^~ /img/    { root /var/www/opcxcity.com; expires 30d; }
+```
+
+然后 `nginx -t && systemctl reload nginx`。用浏览器直接打开 `https://www.opcxcity.com/img/stage.jpg`，能看到照片就对了。
+
+更稳的做法是官网单独一个 server 块（只绑 opcxcity.com 和 www），学习平台用自己的 study.opcxcity.com，两边互不干扰。
 
 ---
 
