@@ -28,7 +28,7 @@ FILES="index.html mark.png $(grep -o 'img/[A-Za-z0-9_-]*\.\(jpg\|png\|webp\)' in
 for f in $FILES; do [ -f "$f" ] || { echo "缺少文件：$f"; exit 1; }; done
 
 echo "2/3 上传到 $DEPLOY_HOST:$DEPLOY_ROOT"
-tar czf - $FILES | ssh "$DEPLOY_HOST" "mkdir -p '$DEPLOY_ROOT' && tar xzf - -C '$DEPLOY_ROOT'"
+COPYFILE_DISABLE=1 tar --no-xattrs -czf - $FILES | ssh "$DEPLOY_HOST" "mkdir -p '$DEPLOY_ROOT' && tar xzf - -C '$DEPLOY_ROOT'"
 
 HOST=${DEPLOY_HOST#*@}
 echo "3/3 检查 http://$HOST/"
