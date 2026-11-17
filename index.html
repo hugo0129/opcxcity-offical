@@ -196,6 +196,24 @@ section{padding-block:var(--gap)}
 .c-ink .press .o{color:var(--mist)}
 .c-ink .press .h{text-decoration-color:#3a5663}
 
+
+/* study */
+.study{background:var(--night);color:#fff}
+.study-top{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:end}
+.study-top p{color:#d5e0e6;font-size:var(--t3);margin-top:12px;max-width:26em}
+.study .acts{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.study .btn.alt{background:var(--night3);color:#fff}
+.cats{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-end}
+.cats span{font-size:14px;background:var(--night2);color:#d5e0e6;border-radius:999px;padding:6px 14px}
+.courses{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:clamp(32px,4vw,52px)}
+.courses a{display:flex;flex-direction:column;justify-content:space-between;gap:28px;min-height:150px;background:var(--night2);border-radius:18px;padding:22px 24px;text-decoration:none;position:relative;overflow:hidden;transition:transform .25s cubic-bezier(.2,.8,.2,1),background .2s}
+.courses a::after{content:"";position:absolute;right:-30px;bottom:-30px;width:90px;height:90px;border-radius:50%;background:var(--blue);opacity:.9;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.courses li:nth-child(3n+2) a::after{background:var(--yellow)}
+.courses a:hover{transform:translateY(-3px);background:var(--night3)}
+.courses a:hover::after{transform:scale(1.2)}
+.courses .t{font-size:18px;font-weight:700;line-height:1.45;max-width:14em;position:relative;z-index:1}
+.courses .m{font-size:13px;color:var(--mist);position:relative;z-index:1}
+
 /* creed */
 .creed{background:var(--paper)}
 .creed .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:clamp(28px,3vw,44px)}
@@ -264,6 +282,9 @@ footer .logo b{color:var(--yellow)}
   .founder figure img{aspect-ratio:4/3}
   .pillar{min-height:180px}
   .case-grid{grid-template-columns:1fr}
+  .study-top{grid-template-columns:1fr}
+  .courses{grid-template-columns:1fr}
+  .courses a{min-height:0}
   .offer{grid-template-columns:1fr}
   .stats{grid-template-columns:repeat(3,1fr);gap:12px}
   .lbl{display:none}
@@ -285,6 +306,7 @@ footer .logo b{color:var(--yellow)}
       <li><a href="#atlas">城市</a></li>
       <li><a href="#milestones">足迹</a></li>
       <li><a href="#cases">标杆</a></li>
+      <li><a href="#study">学习</a></li>
       <li><a href="#creed">理念</a></li>
     </ul>
     <a class="btn" href="#join">加入<span class="full">联盟</span></a>
@@ -497,6 +519,30 @@ footer .logo b{color:var(--yellow)}
     </div>
   </section>
 
+  <section class="study" id="study" aria-labelledby="study-h">
+    <div class="wrap">
+      <div class="study-top">
+        <div>
+          <h2 id="study-h" class="rv">OPC 学习平台</h2>
+          <p class="rv" style="--i:1">一个人开公司，先学会给 AI 派活。从 DeepSeek、Coze 上手，到行业应用、岗位应用，按自己的节奏学。</p>
+          <div class="acts rv" style="--i:2">
+            <a class="btn" href="https://study.opcxcity.com/" target="_blank" rel="noopener">进入学习平台</a>
+            <a class="btn alt" href="https://study.opcxcity.com/PC/register" target="_blank" rel="noopener">注册账号</a>
+          </div>
+        </div>
+        <div class="cats rv" style="--i:2" aria-label="课程分类"><span>DeepSeek</span><span>ChatGPT</span><span>Kimi</span><span>Coze</span><span>通义千问</span><span>文心一言</span><span>AI 创作</span><span>AIGC 办公提效</span><span>AIGC 行业应用</span><span>AIGC 岗位应用</span><span>大语言模型</span><span>机器学习</span><span>深度学习</span><span>计算机视觉</span><span>自然语言处理</span></div>
+      </div>
+      <ul class="courses">
+          <li class="rv"><a href="https://study.opcxcity.com/PC/online-course" target="_blank" rel="noopener"><span class="t">DeepSeek 搭建 Agent 智能体</span><span class="m">讲师 杨奕南 · 13 节 · 36 分钟</span></a></li>
+          <li class="rv" style="--i:1"><a href="https://study.opcxcity.com/PC/online-course" target="_blank" rel="noopener"><span class="t">人人必会的 AI 领域知识</span><span class="m">讲师 张竞宇 · 4 节 · 52 分钟</span></a></li>
+          <li class="rv" style="--i:2"><a href="https://study.opcxcity.com/PC/online-course" target="_blank" rel="noopener"><span class="t">AI 前沿技术及行业创新应用</span><span class="m">讲师 寒小阳 · 5 节 · 1 小时 44 分钟</span></a></li>
+          <li class="rv"><a href="https://study.opcxcity.com/PC/online-course" target="_blank" rel="noopener"><span class="t">AI 将如何改变传统制造业</span><span class="m">讲师 寒小阳 · 5 节 · 50 分钟</span></a></li>
+          <li class="rv" style="--i:1"><a href="https://study.opcxcity.com/PC/online-course" target="_blank" rel="noopener"><span class="t">基于机器学习的精准营销案例</span><span class="m">讲师 Bean · 5 节 · 59 分钟</span></a></li>
+          <li class="rv" style="--i:2"><a href="https://study.opcxcity.com/PC/online-course" target="_blank" rel="noopener"><span class="t">AI 时代的新机遇：知识图谱技术</span><span class="m">讲师 胡辉 · 16 节 · 49 分钟</span></a></li>
+      </ul>
+    </div>
+  </section>
+
   <section class="creed" id="creed" aria-labelledby="creed-h">
     <div class="wrap">
       <h2 id="creed-h" class="rv">我们坚持两个公益</h2>
@@ -630,7 +676,7 @@ document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',(
 board();pick(HQ);
 const navA=[...document.querySelectorAll('.nav ul a')];
 const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)navA.forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
-['atlas','milestones','cases','creed','join'].forEach(id=>so.observe(document.getElementById(id)));
+['atlas','milestones','cases','study','creed','join'].forEach(id=>so.observe(document.getElementById(id)));
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});
 document.querySelectorAll('.rv').forEach(e=>io.observe(e));
 </script>
